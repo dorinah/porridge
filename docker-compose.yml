@@ -1,0 +1,59 @@
+version: "3"
+services:
+    # react frontend
+    frontend:
+      build:
+        context: ./app-frontend
+      ports:
+        - 3001:3000
+      networks:
+        - porridge
+    # Mysql database container
+    db:
+        image: mysql
+        container_name: porridge_db_symfony
+        restart: always
+        ports:
+            - "33066:3306"
+        volumes:
+            - db-data:/var/lib/mysql
+        environment:
+            MYSQL_DATABASE: "porridge"
+            MYSQL_USER: "porridge"
+            MYSQL_PASSWORD: "!ChangeMe!"
+        networks:
+            - porridge
+
+    # phpmyadmin container
+    phpmyadmin:
+        image: phpmyadmin
+        container_name: porridge_phpmyadmin
+        restart: always
+        depends_on:
+            - db
+        ports:
+            - 8742:80
+        environment:
+            PMA_HOST: db
+        networks:
+            - porridge
+
+    # Symfony backend
+    backend:
+        build:
+         context: ./app-backend
+        container_name: porridge_symfony
+        ports:
+          - "8741:80"
+        # volumes:
+        #     - ./app-backend/vhosts:/etc/apache2/sites-enabled
+        #     - ./porridge:/var/www
+        restart: always
+        networks:
+            - porridge
+
+networks:
+    porridge:
+
+volumes:
+    db-data:
