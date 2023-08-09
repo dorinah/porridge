@@ -21,6 +21,7 @@ services:
             MYSQL_DATABASE: "porridge"
             MYSQL_USER: "porridge"
             MYSQL_PASSWORD: "!ChangeMe!"
+            MYSQL_ROOT_PASSWORD: "!ChangeMe!"
         networks:
             - porridge
 
